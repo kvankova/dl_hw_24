@@ -74,6 +74,15 @@ def main(args: argparse.Namespace) -> dict[str, float]:
     #   from `args.activation`, allowing "none", "relu", "tanh", "sigmoid";
     # - finally, add an output fully connected layer with  `MNIST.LABELS` units
     #   and `softmax` activation.
+    model.add(keras.layers.Rescaling(1 / 255))
+    model.add(keras.layers.Flatten())
+    for _ in range(args.hidden_layers):
+        if args.activation != "none":
+            model.add(keras.layers.Dense(args.hidden_layer, activation=args.activation))
+        else:
+            model.add(keras.layers.Dense(args.hidden_layer))
+            
+    model.add(keras.layers.Dense(MNIST.LABELS, activation="softmax"))
 
     model.compile(
         optimizer=keras.optimizers.Adam(),
